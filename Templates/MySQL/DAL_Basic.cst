@@ -57,7 +57,7 @@ namespace Weapp.Repository
         public <%=GetIdentityType(Table) %> Insert(<%=entity%> entity)
         {
             string sql = "INSERT INTO `<%=Table.Name%>` (<%=GetFields(Table) %>) VALUES (<%=GetValues(Table) %>);SELECT @@IDENTITY";
-            return _db.Query<<%=GetIdentityType(Table) %>>(sql, entity).Single();
+            return _db.Query<<%=GetIdentityType(Table) %>>(sql, entity).SingleOrDefault();
         }
         
         <%} else{%>
