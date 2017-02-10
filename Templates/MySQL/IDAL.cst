@@ -27,7 +27,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Weapp.Model;
 
-namespace Weapp.Repository
+namespace Weapp.IRepository
 {
     <%PrintHeader(Table.Name + "表拓展方法，请在此文件中添加拓展方法"); %>
     
