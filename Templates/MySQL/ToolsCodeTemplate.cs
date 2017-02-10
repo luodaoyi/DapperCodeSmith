@@ -6,6 +6,11 @@ using System.Text.RegularExpressions;
 
 public class ToolsCodeTemplate:CodeTemplate
 {
+    /// <summary>
+    /// 数据库类型转换为c#类型
+    /// </summary>
+    /// <param name="column"></param>
+    /// <returns></returns>
     public string GetCsharpType(ColumnSchema column)
 	{
 	    if (column.Name.EndsWith("TypeCode")) return column.Name;
@@ -156,6 +161,11 @@ public class ToolsCodeTemplate:CodeTemplate
         }
     }
     
+    /// <summary>
+    /// 是否自增
+    /// </summary>
+    /// <param name="column"></param>
+    /// <returns></returns>
     public bool IsIdentity(ColumnSchema column)
     {
         if((bool)column.ExtendedProperties["CS_IsIdentity"].Value) 
@@ -256,7 +266,6 @@ public class ToolsCodeTemplate:CodeTemplate
 		return null;
     }
     
-    
     public string GetIdentityName(TableSchema table)
     {
         if (HasIdentity(table))
@@ -347,6 +356,17 @@ public class ToolsCodeTemplate:CodeTemplate
         return fields.Substring(0,fields.Length-1);
     }
     
+    public string GetAllValues(TableSchema table)
+    {
+        string values=null;
+        foreach(var column in table.Columns)
+        {
+           values+="`"+column.Name+"`=@"+column.Name;
+                values+=",";
+        }
+        return values.Substring(0,values.Length-1);
+    }
+    
     public string GetValuesEquals_NoPI(TableSchema table)
     {
         string values=null;
@@ -364,7 +384,7 @@ public class ToolsCodeTemplate:CodeTemplate
     public void PrintHeader(string descript = null)
 	{
 		Response.WriteLine("    //============================================================================");
-		Response.WriteLine("    // Author: yet");
+		Response.WriteLine("    // Author: luody");
         Response.WriteLine("    // CreateDate: "+ DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"));
         Response.WriteLine("    // Descript: " + descript);
         Response.WriteLine("    // ");

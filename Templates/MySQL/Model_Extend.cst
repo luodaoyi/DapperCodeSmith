@@ -8,7 +8,7 @@
 <script runat="template">
     public override string GetFileName()
     {
-    	return Table.Name + "Table_Extend.cs";
+    	return Table.Name + "_Ext.cs";
     }
 </script>
 using System;

@@ -4,6 +4,7 @@
 <%@ Import Namespace="System.Data" %>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="ToolsCodeTemplate.cs" Inherits="ToolsCodeTemplate" %>
 <%@ Property Name="Table" Type="SchemaExplorer.TableSchema" Category="DB" %>
+
 <script runat="template">
     public override string GetFileName()
     {
@@ -11,12 +12,13 @@
     
         string b = a[0].ToString().ToUpper() + a.Substring(1);
         
-    	return b + "Repository_ext.cs";
+    	return b + "Repository.cs";
     }
 </script>
 
 <% 
     string entity=Table.Name.Replace("weapp_","");
+    
     string a = Table.Name.Replace("weapp_","");
     
     string b = a[0].ToString().ToUpper() + a.Substring(1);
@@ -24,7 +26,7 @@
     string dalName = b + "Repository";
 %>
 
-using System;
+using System;   
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,8 +36,7 @@ using Dapper;
 
 namespace Weapp.Repository
 {
-    <%PrintHeader(Table.Name + "表拓展方法，请在此文件中添加拓展方法"); %>
-    //<%=dalName %>_ext
+    <%PrintHeader("模板生成方法，对应"+Table.Name+"表基础增、删、改、查、等方法。"); %>
     
     /// <summary>
     /// 表名:<%=Table.Name %>
@@ -44,6 +45,30 @@ namespace Weapp.Repository
     /// </summary>
     public partial class <%=dalName %> : I<%=dalName %>
     {
+        //<%=GetAllValues(Table)%>
         
+        protected readonly IWeDbContext _db;
+        public <%=dalName %>(IWeDbContext dbcontext)
+        {
+            this._db = dbcontext;
+        }
+        
+        <%if(HasIdentity(Table)) {%>
+        public <%=GetIdentityType(Table) %> Insert(<%=entity%> entity)
+        {
+            string sql = "INSERT INTO `<%=Table.Name%>` (<%=GetFields(Table) %>) VALUES (<%=GetValues(Table) %>);SELECT @@IDENTITY";
+            return _db.Query<<%=GetIdentityType(Table) %>>(sql, entity).Single();
+        }
+        
+        <%} else{%>
+        public int Insert(<%=entity%> entity)
+        {
+            string sql = "INSERT INTO `<%=Table.Name%>` (<%=GetFields(Table) %>) VALUES (<%=GetValues(Table) %>)";
+            return _db.Execute(sql, entity);
+        }
+        <%} %>
+       
+       //上面全都是生成的 以后生成直接替换即可
     }
+    
 }

@@ -1,20 +1,22 @@
 ﻿<%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="System.Data" %>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="ToolsCodeTemplate.cs" Inherits="ToolsCodeTemplate" %>
-<%@ Property Name="Table" Type="SchemaExplorer.TableSchema" Category="DB" %>
-<%@ Property Name="NameSpace" Type="System.String" Default="MyWeb.Model" Category="String" %>
+<%@ Property Name="Table" Type="SchemaExplorer.TableSchema" Category="表" Description="要操作的表" %>
 <script runat="template">
     public override string GetFileName()
     {
-    	return Table.Name + "Table.cs";
+    	return Table.Name.Replace("weapp_","") + ".cs";
     }
 </script>
 using System;
-using Utils;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace <%=NameSpace %>
+namespace Weapp.Model
 {
     <%PrintHeader("模板生成属性，对应"+Table.Name+"表字段。"); %>
     
@@ -23,12 +25,12 @@ namespace <%=NameSpace %>
     /// 描述:<%=Table.Description %>
     /// 主键和自增:<%if(!Table.HasPrimaryKey) {%>无主键<%} %> <%if(!HasIdentity(Table)) {%>无自增字段<%} %>
     /// </summary>
-    public partial class <%=Table.Name %>Table : EntityBase
+    public partial class <%=Table.Name.Replace("weapp_","") %> 
     {
         <%foreach(var column in Table.Columns) {%>
-        /// <summary>
-        /// 字段描述:<%=column.Description %><%=column.DataType %>
-        /// 数据类型:<%=GetSqlDbType(column) %>
+        /// <summary>      
+        /// 字段描述:<%=column.Description %>
+        /// 数据类型:<%=column.DataType %>
         /// 数据长度:<%=column.Size %>
         /// 允许空值:<%=column.AllowDBNull %>
         <%if(column.IsPrimaryKeyMember) {%>

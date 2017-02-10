@@ -7,11 +7,7 @@
 <script runat="template">
     public override string GetFileName()
     {
-        string a = Table.Name.Replace("weapp_","");
-    
-        string b = a[0].ToString().ToUpper() + a.Substring(1);
-        
-    	return b + "Repository_ext.cs";
+    	return Table.Name + "Repository_ext.cs";
     }
 </script>
 
@@ -30,19 +26,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Weapp.Model;
-using Dapper;
 
 namespace Weapp.Repository
 {
     <%PrintHeader(Table.Name + "表拓展方法，请在此文件中添加拓展方法"); %>
-    //<%=dalName %>_ext
     
     /// <summary>
     /// 表名:<%=Table.Name %>
     /// 描述:<%=Table.Description %>
     /// 主键和自增:<%if(!Table.HasPrimaryKey) {%>无主键<%} %> <%if(!HasIdentity(Table)) {%>无自增字段<%} %>
     /// </summary>
-    public partial class <%=dalName %> : I<%=dalName %>
+    public interface I<%=dalName %>
     {
         
     }
